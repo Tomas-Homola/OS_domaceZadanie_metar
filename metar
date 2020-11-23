@@ -33,10 +33,10 @@ END=$(echo $(date -d "$MM"/"$DD"/"$YYYY" +'%s') + 24*60*60 | bc)
 #echo START = "$START"
 #echo END = "$END"
 
-echo DD = "$DD"
-echo MM = "$MM"
-echo YYYY = "$YYYY"
-echo DATE = "$MM"/"$DD"/"$YYYY"
-echo CODE = "$CODE"
+#echo DD = "$DD"
+#echo MM = "$MM"
+#echo YYYY = "$YYYY"
+#echo DATE = "$MM"/"$DD"/"$YYYY"
+#echo CODE = "$CODE"
 
 curl -s 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString='"$CODE"'&startTime='"$START"'&endTime='"$END"'' | grep "$CODE"
