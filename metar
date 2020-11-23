@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Prva cast datumu bude -> date -d 11/19/2020 +'%s' -> MM/DD/YYYY
+# Druha cast datumu bude -> echo $(date -d 11/19/2020 +'%s') + 24*60*60 | bc
+
+DATE=11/23/2020
+CODE=LZIB
+
+echo default date: "$DATE"
+echo default code: "$CODE"
+
+if [ "$#" != 2 ]
+then
+    	echo 'musia byt 2 argumenty'
+	exit 1
+else
+	DATE="$1"
+	CODE="$2"
+fi
+
+DATE=sed 's@-@/@g' < "$DATE"
+
+echo DATE = "$DATE"
+echo CODE = "$CODE"
+
+curl -s 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString='"$CODE"'&startTime=1605740400&endTime=1605826800' | grep LZIB
