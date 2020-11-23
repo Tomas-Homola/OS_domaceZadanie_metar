@@ -11,7 +11,9 @@ CODE=LZIB
 
 if [ "$#" != 2 ]
 then
-    	echo 'musia byt 2 argumenty'
+    	echo musia byt 2 argumenty:
+       	echo -datum: DD-MM-YYYY
+	echo -spravny kod letiska: CCCC	
 	exit 1
 else
 	DATE="$1"
