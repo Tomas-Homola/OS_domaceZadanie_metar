@@ -11,22 +11,25 @@ then
     	echo musia byt 2 argumenty:
        	echo -datum: DD-MM-YYYY
 	echo -spravny kod letiska: CCCC	
-	exit 1
+	exit -1
 else
 	DATE="$1"
 	CODE="$2"
 
-	# zmena "-" na "/"
+	# zmena "-" na "/" -> vlastne to tu ani nepotrebujeme
 	#DATE=$(echo "$DATE" | sed 's@-@/@g')
 
-	# rozstrihanie datumu na den, mesiac a rok
+	# rozstrihanie datumu na den, mesiac a rok -> staci ten zadany datum iba rozkrajat
 	DD=$(echo "$DATE" | cut -c1-2)
 	MM=$(echo "$DATE" | cut -c4-5)
 	YYYY=$(echo "$DATE" | cut -c7-10)
 
 	# vypocet zaciatocnej a koncovej hodnoty v sekundach pre datum
 	START=$(echo $(date -d "$MM"/"$DD"/"$YYYY" +'%s'))
+	END=$(echo "$START" + 24*60*60 | bc)
+	echo end zo startu = "$END"
 	END=$(echo $(date -d "$MM"/"$DD"/"$YYYY" +'%s') + 24*60*60 | bc)
+	echo end z datumu = "$END"
 
 	curl -s 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString='"$CODE"'&startTime='"$START"'&endTime='"$END"'' | grep "$CODE"
 
