@@ -6,9 +6,6 @@
 DATE=11/23/2020
 CODE=LZIB
 
-#echo default date: "$DATE"
-#echo default code: "$CODE"
-
 if [ "$#" != 2 ]
 then
     	echo musia byt 2 argumenty:
@@ -18,20 +15,24 @@ then
 else
 	DATE="$1"
 	CODE="$2"
+
+	# zmena "-" na "/"
+	#DATE=$(echo "$DATE" | sed 's@-@/@g')
+
+	# rozstrihanie datumu na den, mesiac a rok
+	DD=$(echo "$DATE" | cut -c1-2)
+	MM=$(echo "$DATE" | cut -c4-5)
+	YYYY=$(echo "$DATE" | cut -c7-10)
+
+	# vypocet zaciatocnej a koncovej hodnoty v sekundach pre datum
+	START=$(echo $(date -d "$MM"/"$DD"/"$YYYY" +'%s'))
+	END=$(echo $(date -d "$MM"/"$DD"/"$YYYY" +'%s') + 24*60*60 | bc)
+
+	curl -s 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString='"$CODE"'&startTime='"$START"'&endTime='"$END"'' | grep "$CODE"
+
 fi
 
-# zmena "-" na "/"
-DATE=$(echo "$DATE" | sed 's@-@/@g')
-
-# rozstrihanie datumu na den, mesiac a rok
-DD=$(echo "$DATE" | cut -c1-2)
-MM=$(echo "$DATE" | cut -c4-5)
-YYYY=$(echo "$DATE" | cut -c7-10)
-
-# vypocet zaciatocnej a koncovej hodnoty v sekundach pre datum
-START=$(echo $(date -d "$MM"/"$DD"/"$YYYY" +'%s'))
-END=$(echo $(date -d "$MM"/"$DD"/"$YYYY" +'%s') + 24*60*60 | bc)
-
+# kontrolne echo prikazy
 #echo START = "$START"
 #echo END = "$END"
 
@@ -40,5 +41,3 @@ END=$(echo $(date -d "$MM"/"$DD"/"$YYYY" +'%s') + 24*60*60 | bc)
 #echo YYYY = "$YYYY"
 #echo DATE = "$MM"/"$DD"/"$YYYY"
 #echo CODE = "$CODE"
-
-curl -s 'https://aviationweather.gov/adds/dataserver_current/httpparam?dataSource=metars&requestType=retrieve&format=csv&stationString='"$CODE"'&startTime='"$START"'&endTime='"$END"'' | grep "$CODE"
